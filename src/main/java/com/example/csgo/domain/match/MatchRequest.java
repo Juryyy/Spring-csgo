@@ -17,7 +17,7 @@ public class MatchRequest {
 
     @NotEmpty
     @Schema(description = "Map name.", example = "de_dust2",
-            allowableValues = {"de_dust2", "de_inferno", "de_mirage", "de_overpass", "de_train", "de_nuke", "de_vertigo", "de_ancient", "de_anubis"})
+            allowableValues = {"de_dust2", "de_inferno", "de_mirage", "de_overpass", "de_train", "de_nuke", "de_vertigo", "de_ancient", "de_anubis", "de_cache", "de_cbble"})
     private String map;
 
     public void toMatch(Match match) {

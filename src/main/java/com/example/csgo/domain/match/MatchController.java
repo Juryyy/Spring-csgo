@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/matches")
@@ -80,5 +82,19 @@ public class MatchController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMatch(@PathVariable Long id) {
         matchService.deleteMatch(id);
+    }
+
+    @GetMapping(value = "/counts", produces = "application/json")
+    @Operation(
+            summary = "Get counts of each map",
+            description = "Get counts of each map in the system."
+    )
+    @ApiResponse(responseCode = "200", description = "List of counts")
+    @Cacheable("mapCounts")
+    @ResponseStatus(HttpStatus.OK)
+    public ObjectResponse<Map<String, Integer>> getMapCounts() {
+        Map<String, Long> mapCounts = matchService.getMapCounts();
+        return ObjectResponse.of(mapCounts, longMap -> longMap.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> Math.toIntExact(e.getValue()))));
     }
 }

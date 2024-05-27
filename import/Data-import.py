@@ -6,7 +6,7 @@ conn = psycopg2.connect("dbname=postgres user=postgres password=123 host=localho
 cur = conn.cursor()
 
 
-dataType = 'dmg' # kills, dmg, grenades, meta_demos
+dataType = 'rounds' # kills, dmg, grenades, meta_demos, rounds
 
 if dataType == 'meta_demos':
     with open('esea_meta_demos.part2.csv', 'r') as f:
@@ -117,6 +117,43 @@ if dataType == 'dmg':
                     elapsed_time = end_time - start_time
                     print(f'Processed {i} rows in {elapsed_time:.2f} seconds')
                     start_time = time.time()  # Restart the timer
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+if dataType == 'rounds':
+    for filename in ['esea_meta_demos.part1.csv','esea_meta_demos.part2.csv']:
+        with open(filename, 'r') as f:
+            reader = csv.reader(f)
+            next(reader) 
+            for i, row in enumerate(reader):
+                match_number = int(row[0].split('_')[2].split('.')[0])
+
+                # Look up the match ID in the matches table
+                cur.execute(
+                    "SELECT id FROM matches WHERE match_number = %s",
+                    (match_number,)
+                )
+                result = cur.fetchone()
+                if result is None:
+                    continue
+                match_id = result[0]
+
+                # Extract the round data from the row
+                round_number = row[2]
+                winner_side = row[6]
+                ct_eq_val = row[8]
+                t_eq_val = row[9]
+
+                # Insert the round data into the rounds table
+                cur.execute(
+                    "INSERT INTO rounds (match_id, round, winner_side, ct_eq_val, t_eq_val) VALUES (%s, %s, %s, %s, %s)",
+                    (match_id, round_number, winner_side, ct_eq_val, t_eq_val)
+                )
+
+                if i % 5000000 == 0:
+                    print(f'Inserted {i} rows')
 
     conn.commit()
     cur.close()
