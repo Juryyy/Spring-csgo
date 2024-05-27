@@ -1,5 +1,8 @@
 package com.example.csgo.domain.match;
 
+import lombok.Data;
+
+@Data
 public class MatchResponse {
 
     private Long id;
