@@ -1,6 +1,5 @@
 package com.example.csgo.domain.match;
 
-import com.example.csgo.utils.exceptions.NotFoundException;
 import com.example.csgo.utils.response.ArrayResponse;
 import com.example.csgo.utils.response.ObjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
