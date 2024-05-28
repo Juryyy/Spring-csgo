@@ -97,4 +97,15 @@ public class MatchController {
         return ObjectResponse.of(mapCounts, longMap -> longMap.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> Math.toIntExact(e.getValue()))));
     }
+
+    @GetMapping(value = "/top-map-matches", produces = "application/json")
+    @Operation(
+            summary = "Get matches with the highest rounds for each map",
+            description = "Get matches with the highest rounds for each map."
+    )
+    @ApiResponse(responseCode = "200", description = "List of maps with matches with the highest rounds")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Map<String, Object>> getTopMatches() {
+        return matchService.getMatchesWithHighestRounds();
+    }
 }
