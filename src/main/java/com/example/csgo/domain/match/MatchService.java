@@ -20,6 +20,10 @@ public class MatchService {
         return (List<Match>) matchRepository.findAll();
     }
 
+    public Match getMatchById(Long id) {
+        return matchRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
     public List<Match> getMatchesByMap(String map_name) {
         return matchRepository.findByMap(map_name);
     }
