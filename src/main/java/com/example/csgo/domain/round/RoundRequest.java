@@ -3,6 +3,7 @@ package com.example.csgo.domain.round;
 import com.example.csgo.domain.match.Match;
 import com.example.csgo.domain.match.MatchRepository;
 
+import com.example.csgo.domain.match.MatchService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -39,8 +40,8 @@ public class RoundRequest {
     @Schema(description = "Terrorist equipment value that round", example="10250")
     private int tEqVal;
 
-    public void toRound(Round roundX, Match match) {
-            match.setId(matchId);
+    public void toRound(Round roundX, MatchService matchService) {
+            Match match = matchService.getMatchById(matchId);
             roundX.setMatch(match);
             roundX.setRound(round);
             roundX.setWinnerSide(winnerSide);

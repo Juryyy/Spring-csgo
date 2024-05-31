@@ -22,11 +22,13 @@ Main goal is just to practice with Spring and PostgreSQL, but can help with coll
 ### Matches
     - GET /matches - get all matches
     - GET /matches/{map_name} - get matches by map name
-    - GET /matches/counts - get matches count for each map
+    - GET /matches/maps - get matches count for each map
     - GET /matches/top-map-matches - get list of maps with matches with the highest rounds
-    
+    - GET /matches/{id} - get match by id, with all other data about match    
+
     - POST /matches - create a new match
     - DELETE /matches/{id} - delete a match by id
 
 ### Rounds
     - GET /counts - get rounds count + map for each match
+    - GET /maps - get rounds count for each map

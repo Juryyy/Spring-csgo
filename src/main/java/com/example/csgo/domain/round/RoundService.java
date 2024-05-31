@@ -1,15 +1,12 @@
 package com.example.csgo.domain.round;
 
-import com.example.csgo.domain.match.Match;
 import com.example.csgo.domain.match.MatchRepository;
 import com.example.csgo.utils.interfaces.round.MatchRoundCount;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import com.example.csgo.utils.interfaces.map.MapEnum;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class RoundService {
@@ -23,20 +20,28 @@ public class RoundService {
     @Autowired
     private MatchRepository matchRepository;
 
-    public Round convertToRound(RoundRequest roundRequest) {
-        Round round = new Round();
-        Optional<Match> matchOptional = matchRepository.findById(roundRequest.getMatchId());
-        if (matchOptional.isPresent()) {
-            round.setMatch(matchOptional.get());
-            round.setRound(roundRequest.getRound());
-            round.setWinnerSide(roundRequest.getWinnerSide());
-            round.setCtEqVal(roundRequest.getCtEqVal());
-            round.setTEqVal(roundRequest.getTEqVal());
-        } else {
-            // Handle the case where no Match with the given matchId exists.
-            // This could involve throwing an exception, returning an error response, etc.
-        }
-        return round;
+    public List<String> getAllMaps() {
+        return matchRepository.findAllMaps();
     }
+
+    public List<Map<String, Object>> getRoundsCountForAllMaps() {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (MapEnum mapEnum : MapEnum.values()) {
+            Long roundsCount = roundRepository.countRoundsForMap(mapEnum.getMap());
+            Map<String, Object> mapRoundsCount = new HashMap<>();
+            mapRoundsCount.put("map", mapEnum.getMap());
+            mapRoundsCount.put("roundsCount", roundsCount);
+            result.add(mapRoundsCount);
+        }
+
+        return result;
+    }
+
+    //getRoundsByMatchId
+    public List<Round> getRoundsByMatchId(Long matchId) {
+        return roundRepository.getRoundsByMatchId(matchId);
+    }
+
 
 }

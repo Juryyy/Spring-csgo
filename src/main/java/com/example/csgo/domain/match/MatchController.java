@@ -1,5 +1,9 @@
 package com.example.csgo.domain.match;
 
+import com.example.csgo.domain.kill.Kill;
+import com.example.csgo.domain.kill.KillService;
+import com.example.csgo.domain.round.Round;
+import com.example.csgo.domain.round.RoundService;
 import com.example.csgo.utils.response.ArrayResponse;
 import com.example.csgo.utils.response.ObjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +16,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,6 +27,12 @@ public class MatchController {
 
     @Autowired
     private MatchService matchService;
+
+    @Autowired
+    private RoundService roundService;
+
+    @Autowired
+    private KillService killService;
 
     @GetMapping(value = "", produces = "application/json")
     @Operation(
@@ -36,7 +47,7 @@ public class MatchController {
         return ArrayResponse.of(matches, MatchResponse::new);
     }
 
-    @GetMapping(value = "/{map_name}", produces = "application/json")
+    @GetMapping(value = "/map/{map_name}", produces = "application/json")
     @Operation(
             summary = "Get matches by map",
             description = "Get all matches in the system by map."
@@ -84,7 +95,7 @@ public class MatchController {
         matchService.deleteMatch(id);
     }
 
-    @GetMapping(value = "/counts", produces = "application/json")
+    @GetMapping(value = "/maps", produces = "application/json")
     @Operation(
             summary = "Get counts of each map",
             description = "Get counts of each map in the system."
@@ -107,5 +118,28 @@ public class MatchController {
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getTopMatches() {
         return matchService.getMatchesWithHighestRounds();
+    }
+
+
+    //!Not happy with this method, need update
+    @GetMapping(value = "/{id}", produces = "application/json")
+    @Operation(
+            summary = "Get a match by id, containing all rounds and kills",
+            description = "Get a match in the system by id."
+    )
+    @ApiResponse(responseCode = "200", description = "Match found")
+    @ApiResponse(responseCode = "404", description = "Match not found")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Object> getMatchById(@PathVariable Long id) {
+        Match match = matchService.getMatchById(id);
+        List<Round> rounds = roundService.getRoundsByMatchId(match.getId());
+        List<Kill> kills = killService.getKillsByMatchId(match.getId());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("match", match);
+        response.put("rounds", rounds);
+        response.put("kills", kills);
+
+        return response;
     }
 }
