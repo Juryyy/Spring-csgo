@@ -5,7 +5,7 @@ Main goal is just to practice with Spring and PostgreSQL, but can help with coll
 ## Project tasks:
 
 - [x] Uses Spring, IDEA, PostgreSQL
-- [ ] Includes at least 10 endpoints:
+- [x] Includes at least 10 endpoints
 - [ ] Includes at least 5 calculations (mathematical operations on arrays of data)
 - [x] Code follows DRY principle
 - [x] One method is always doing one thing
@@ -28,7 +28,29 @@ Main goal is just to practice with Spring and PostgreSQL, but can help with coll
 
     - POST /matches - create a new match
     - DELETE /matches/{id} - delete a match by id
+    - PUT /matches/{id} - update a match by id
 
 ### Rounds
     - GET /counts - get rounds count + map for each match
     - GET /maps - get rounds count for each map
+
+### Damage
+    !- GET /damage - get total damage for each match
+    !- GET /damage/{id} - get total damage for specific match
+    !- GET /damage/highest/{id} - get highest damage for specific match
+    !- GET /damage/lowest/{id} - get lowest damage for specific match
+
+
+### Mathematical Operations - Endpoints
+#### Rounds
+    - GET /rounds/average - get average rounds count for all matches
+    - GET /rounds/average/{map_name} - get average rounds count for matches on specific map
+
+    !- GET /rounds/winrate - get winrate for each team
+    !- GET /rounds/winrate/{map_name} - get winrate for each team on specific map
+
+    !- GET /math/average/kills - get average kills count for all matches
+    !- GET /math/average/kills/{map_name} - get average kills count for matches on specific map
+    !- GET /math/average/kills/{side} - get average kills count for matches on specific side
+    !- GET /math/average/kills/weapons - get average kills count for matches with each weapon
+    !- GET /math/average/kills/weapon/{weapon_name} - get average kills count for matches with specific weapon

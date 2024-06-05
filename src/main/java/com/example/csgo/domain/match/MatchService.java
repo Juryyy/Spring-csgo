@@ -64,4 +64,10 @@ public class MatchService {
 
         return result;
     }
+
+    //updateMatch
+    public Match updateMatch(Long id, Match match) {
+        match.setId(id);
+        return matchRepository.save(match);
+    }
 }

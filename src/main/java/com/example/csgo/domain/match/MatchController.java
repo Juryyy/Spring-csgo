@@ -4,8 +4,10 @@ import com.example.csgo.domain.kill.Kill;
 import com.example.csgo.domain.kill.KillService;
 import com.example.csgo.domain.round.Round;
 import com.example.csgo.domain.round.RoundService;
+import com.example.csgo.utils.exceptions.NotFoundException;
 import com.example.csgo.utils.response.ArrayResponse;
 import com.example.csgo.utils.response.ObjectResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -16,7 +18,6 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -78,6 +79,29 @@ public class MatchController {
         return ObjectResponse.of(newMatch, MatchResponse::new);
     }
 
+    @PutMapping(value = "/{id}", produces = "application/json")
+    @Operation(
+            summary = "Update a match",
+            description = "Update a match in the system."
+    )
+    @ApiResponse(responseCode = "200", description = "Match updated")
+    @ApiResponse(responseCode = "404", description = "Match not found")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @Caching(evict = {
+            @CacheEvict(value = "allMatches", allEntries = true),
+            @CacheEvict(value = "matchesByMap", allEntries = true)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    public ObjectResponse<MatchResponse> updateMatch(@PathVariable Long id, @RequestBody @Valid MatchRequest matchRequest) {
+        Match match = matchService.getMatchById(id);
+        if(match == null){
+            throw new NotFoundException();
+        }
+        matchRequest.toMatch(match);
+        Match updatedMatch = matchService.updateMatch(id, match);
+        return ObjectResponse.of(updatedMatch, MatchResponse::new);
+    }
+
     @DeleteMapping(value = "/{id}", produces = "application/json")
     @Operation(
             summary = "Delete a match",
@@ -116,12 +140,11 @@ public class MatchController {
     )
     @ApiResponse(responseCode = "200", description = "List of maps with matches with the highest rounds")
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> getTopMatches() {
-        return matchService.getMatchesWithHighestRounds();
+    public ArrayResponse<Map<String, Object>> getTopMatches() {
+        List<Map<String, Object>> mapCounts = matchService.getMatchesWithHighestRounds();
+        return ArrayResponse.of(mapCounts, m -> m);
     }
 
-
-    //!Not happy with this method, need update
     @GetMapping(value = "/{id}", produces = "application/json")
     @Operation(
             summary = "Get a match by id, containing all rounds and kills",
@@ -130,16 +153,11 @@ public class MatchController {
     @ApiResponse(responseCode = "200", description = "Match found")
     @ApiResponse(responseCode = "404", description = "Match not found")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Object> getMatchById(@PathVariable Long id) {
+    public ObjectResponse<MatchResponse> getMatchById(@PathVariable Long id) {
         Match match = matchService.getMatchById(id);
         List<Round> rounds = roundService.getRoundsByMatchId(match.getId());
         List<Kill> kills = killService.getKillsByMatchId(match.getId());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("match", match);
-        response.put("rounds", rounds);
-        response.put("kills", kills);
-
-        return response;
+        return ObjectResponse.of(match, m -> new MatchResponse(m, rounds, kills));
     }
 }

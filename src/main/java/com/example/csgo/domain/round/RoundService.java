@@ -43,5 +43,15 @@ public class RoundService {
         return roundRepository.getRoundsByMatchId(matchId);
     }
 
+    public double getAverageRoundCount() {
+        Double average = roundRepository.getAverageRoundCount();
+        return average != null ? average : 0;
+    }
+
+    public double getAverageRoundCountForMap(String map) {
+        Double roundsCount = roundRepository.getAvgCountRoundsForMap(map);
+        return roundsCount != null ? roundsCount : 0;
+    }
+
 
 }
