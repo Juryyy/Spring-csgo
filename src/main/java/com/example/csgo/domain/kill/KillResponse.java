@@ -4,15 +4,6 @@ import com.example.csgo.domain.round.Round;
 
 public class KillResponse {
 
-    //        <column name="round" type="int" />
-    //        <column name="attack_side" type="varchar(255)" />
-    //        <column name="victim_side" type="varchar(255)" />
-    //        <column name="weapon" type="varchar(255)" />
-    //        <column name="weapon_type" type="varchar(255)" />
-    //        <column name="ct_alive" type="int" />
-    //        <column name="t_alive" type="int" />
-    //        <column name="is_bomb_planted" type="boolean" />
-
     private Long id;
     private Long matchId;
     private String attackSide;

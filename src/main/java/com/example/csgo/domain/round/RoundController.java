@@ -1,15 +1,15 @@
 package com.example.csgo.domain.round;
 
+import com.example.csgo.domain.match.Match;
+import com.example.csgo.domain.match.MatchService;
+import com.example.csgo.utils.exceptions.NotFoundException;
 import com.example.csgo.utils.interfaces.round.MatchRoundCount;
 import com.example.csgo.utils.response.ArrayResponse;
 import com.example.csgo.utils.response.ObjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -20,9 +20,8 @@ public class RoundController {
     @Autowired
     private RoundService roundService;
 
-    public RoundController(RoundService roundService) {
-        this.roundService = roundService;
-    }
+    @Autowired
+    private MatchService matchService;
 
     @GetMapping("/counts")
     @Operation(
@@ -67,10 +66,42 @@ public class RoundController {
         double averageRoundCount = roundService.getAverageRoundCountForMap(map);
         Map<String, Double> response = Map.of(map, averageRoundCount);
         return ObjectResponse.of(response, responseMap -> responseMap);
-
-
-
     }
+
+    @GetMapping(value = "/winrate/{map}", produces = "application/json")
+    @Operation(
+            summary = "Get win rate for each team on a map",
+            description = "Get the win rate for each team on a specific map."
+    )
+    @ApiResponse(responseCode = "200", description = "Win rate for each team on a map")
+    @ApiResponse(responseCode = "404", description = "Map not found")
+    public ObjectResponse<Map<String, Double>> getWinRateForTeamsOnMap(@PathVariable String map) {
+        Map<String, Double> winRates = roundService.getWinRateForTeamsOnMap(map);
+        return ObjectResponse.of(winRates, winRateMap -> winRateMap);
+    }
+
+    @PostMapping(value = "", produces = "application/json")
+    @Operation(
+            summary = "Create a round",
+            description = "Create a new round."
+    )
+    @ApiResponse(responseCode = "201", description = "Round created")
+    @ApiResponse(responseCode = "400", description = "Invalid round data")
+    public ObjectResponse<Round> createRound(@RequestBody RoundRequest roundRequest) {
+        Round round = new Round();
+        Match match = matchService.getMatchById(roundRequest.getMatchId());
+
+        if (match == null) {
+            throw new NotFoundException();
+        }
+        roundRequest.toRound(round, match);
+
+        roundService.createRound(round);
+
+        return ObjectResponse.of(round, createdRoundResponse -> createdRoundResponse);
+    }
+
+
 
 
 

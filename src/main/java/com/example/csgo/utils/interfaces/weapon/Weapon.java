@@ -44,8 +44,7 @@ public enum Weapon {
     Zeus(WeaponType.Equipment),
     P90(WeaponType.SMG),
     M249(WeaponType.Heavy),
-    Smoke(WeaponType.Grenade),
-    ;
+    Smoke(WeaponType.Grenade);
 
     private final WeaponType weaponType;
 

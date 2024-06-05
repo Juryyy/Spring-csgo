@@ -1,6 +1,7 @@
 package com.example.csgo.domain.round;
 
 import com.example.csgo.domain.match.MatchRepository;
+import com.example.csgo.utils.exceptions.ConflictException;
 import com.example.csgo.utils.interfaces.round.MatchRoundCount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,28 @@ public class RoundService {
     public double getAverageRoundCountForMap(String map) {
         Double roundsCount = roundRepository.getAvgCountRoundsForMap(map);
         return roundsCount != null ? roundsCount : 0;
+    }
+
+    public Map<String, Double> getWinRateForTeamsOnMap(String map) {
+        Long totalRounds = roundRepository.countRoundsForMap(map);
+        Long roundsWonByCT = roundRepository.countRoundsWonByCT(map);
+        Long roundsWonByT = roundRepository.countRoundsWonByT(map);
+
+        double ctWinRate = (double) roundsWonByCT / totalRounds * 100;
+        double tWinRate = (double) roundsWonByT / totalRounds * 100;
+
+        Map<String, Double> winRates = new HashMap<>();
+        winRates.put("CounterTerrorist", ctWinRate);
+        winRates.put("Terrorist", tWinRate);
+
+        return winRates;
+    }
+
+    public Round createRound(Round round){
+        if(!roundRepository.existsByMatch_IdAndRound(round.getMatch().getId(), round.getRound()))
+            return roundRepository.save(round);
+        else
+            throw new ConflictException();
     }
 
 

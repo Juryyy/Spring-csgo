@@ -23,4 +23,12 @@ public interface RoundRepository extends CrudRepository<Round, Long> {
 
     @Query(value = "SELECT AVG(subquery.count_id) FROM (SELECT COUNT(r.id) AS count_id FROM rounds r JOIN matches m ON r.match_id = m.id WHERE m.map = :map GROUP BY r.match_id) AS subquery", nativeQuery = true)
     Double getAvgCountRoundsForMap(String map);
+
+    @Query(value = "SELECT COUNT(r) FROM Round r WHERE r.match.map = :map AND r.winnerSide = 'CounterTerrorist'")
+    Long countRoundsWonByCT(String map);
+
+    @Query(value = "SELECT COUNT(r) FROM Round r WHERE r.match.map = :map AND r.winnerSide = 'Terrorist'")
+    Long countRoundsWonByT(String map);
+
+    boolean existsByMatch_IdAndRound(Long matchId, int round);
 }

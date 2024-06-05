@@ -1,18 +1,11 @@
 package com.example.csgo.domain.round;
 
 import com.example.csgo.domain.match.Match;
-import com.example.csgo.domain.match.MatchRepository;
-
-import com.example.csgo.domain.match.MatchService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Data
@@ -40,8 +33,7 @@ public class RoundRequest {
     @Schema(description = "Terrorist equipment value that round", example="10250")
     private int tEqVal;
 
-    public void toRound(Round roundX, MatchService matchService) {
-            Match match = matchService.getMatchById(matchId);
+    public void toRound(Round roundX, Match match) {
             roundX.setMatch(match);
             roundX.setRound(round);
             roundX.setWinnerSide(winnerSide);
