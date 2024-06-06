@@ -90,16 +90,41 @@ public class RoundController {
     public ObjectResponse<Round> createRound(@RequestBody RoundRequest roundRequest) {
         Round round = new Round();
         Match match = matchService.getMatchById(roundRequest.getMatchId());
-
-        if (match == null) {
-            throw new NotFoundException();
-        }
         roundRequest.toRound(round, match);
 
         roundService.createRound(round);
 
         return ObjectResponse.of(round, createdRoundResponse -> createdRoundResponse);
     }
+
+    @PutMapping(value = "/{id}", produces = "application/json")
+    @Operation(
+            summary = "Update a round",
+            description = "Update an existing round."
+    )
+    @ApiResponse(responseCode = "202", description = "Round updated")
+    @ApiResponse(responseCode = "400", description = "Invalid round data")
+    @ApiResponse(responseCode = "404", description = "Round not found")
+    public ObjectResponse<Round> updateRound(@PathVariable Long id, @RequestBody RoundRequest roundRequest) {
+        Round round = roundService.getRoundById(id).orElseThrow(NotFoundException::new);
+
+        roundRequest.toRound(round, matchService.getMatchById(roundRequest.getMatchId()));
+
+        roundService.updateRound(id, round);
+
+        return ObjectResponse.of(round, updatedRoundResponse -> updatedRoundResponse);
+    }
+
+    //@DeleteMapping(value = "/{id}", produces = "application/json")
+    //@Operation(
+    //        summary = "Delete a round",
+    //        description = "Delete an existing round."
+    //)
+    //@ApiResponse(responseCode = "204", description = "Round deleted")
+    //@ApiResponse(responseCode = "404", description = "Round not found")
+    //public void deleteRound(@PathVariable Long id) {
+    //    roundService.deleteRound(id);
+    //}
 
 
 

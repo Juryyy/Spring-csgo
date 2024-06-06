@@ -4,6 +4,7 @@ import com.example.csgo.domain.kill.Kill;
 import com.example.csgo.domain.kill.KillService;
 import com.example.csgo.domain.round.Round;
 import com.example.csgo.domain.round.RoundService;
+import com.example.csgo.utils.exceptions.MapNotInEnumException;
 import com.example.csgo.utils.exceptions.NotFoundException;
 import com.example.csgo.utils.response.ArrayResponse;
 import com.example.csgo.utils.response.ObjectResponse;
@@ -11,12 +12,15 @@ import com.example.csgo.utils.response.ObjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/matches")
+@Validated
 public class MatchController {
 
     @Autowired
@@ -41,7 +46,6 @@ public class MatchController {
             description = "Get all matches in the system."
     )
     @ApiResponse(responseCode = "200", description = "List of matches")
-    @Cacheable("allMatches")
     @ResponseStatus(HttpStatus.OK)
     public ArrayResponse<MatchResponse> getAllMatches() {
         List<Match> matches = matchService.getAllMatches();
@@ -54,7 +58,6 @@ public class MatchController {
             description = "Get all matches in the system by map."
     )
     @ApiResponse(responseCode = "200", description = "List of matches")
-    @Cacheable(value = "matchesByMap", key = "#map_name")
     @ResponseStatus(HttpStatus.OK)
     public ArrayResponse<MatchResponse> getMatchesByMap(@PathVariable String map_name) {
         List<Match> matches = matchService.getMatchesByMap(map_name);
@@ -67,16 +70,18 @@ public class MatchController {
             description = "Create a match in the system."
     )
     @ApiResponse(responseCode = "201", description = "Match created")
-    @Caching(evict = {
-            @CacheEvict(value = "allMatches", allEntries = true),
-            @CacheEvict(value = "matchesByMap", key = "#match.map")
-    })
+    @ApiResponse(responseCode = "400", description = "Bad request")
     @ResponseStatus(HttpStatus.CREATED)
-    public ObjectResponse<MatchResponse> createMatch(@RequestBody @Valid MatchRequest match) {
-        Match newMatch = new Match();
-        match.toMatch(newMatch);
-        matchService.createMatch(newMatch);
-        return ObjectResponse.of(newMatch, MatchResponse::new);
+    @Valid
+    public ObjectResponse<MatchResponse> createMatch(@Valid @RequestBody MatchRequest matchRequest) {
+        try {
+            Match match = new Match();
+            matchRequest.toMatch(match);
+            match = matchService.createMatch(match);
+            return ObjectResponse.of(match, MatchResponse::new);
+        } catch (MapNotInEnumException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 
     @PutMapping(value = "/{id}", produces = "application/json")
@@ -86,20 +91,19 @@ public class MatchController {
     )
     @ApiResponse(responseCode = "200", description = "Match updated")
     @ApiResponse(responseCode = "404", description = "Match not found")
-    @ApiResponse(responseCode = "400", description = "Bad request")
-    @Caching(evict = {
-            @CacheEvict(value = "allMatches", allEntries = true),
-            @CacheEvict(value = "matchesByMap", allEntries = true)
-    })
     @ResponseStatus(HttpStatus.OK)
     public ObjectResponse<MatchResponse> updateMatch(@PathVariable Long id, @RequestBody @Valid MatchRequest matchRequest) {
-        Match match = matchService.getMatchById(id);
-        if(match == null){
-            throw new NotFoundException();
+        try {
+            Match match = matchService.getMatchById(id);
+            if (match == null) {
+                throw new NotFoundException();
+            }
+            matchRequest.toMatch(match);
+            Match updatedMatch = matchService.updateMatch(id, match);
+            return ObjectResponse.of(updatedMatch, MatchResponse::new);
+        } catch(MapNotInEnumException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        matchRequest.toMatch(match);
-        Match updatedMatch = matchService.updateMatch(id, match);
-        return ObjectResponse.of(updatedMatch, MatchResponse::new);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")
@@ -110,10 +114,6 @@ public class MatchController {
     @ApiResponse(responseCode = "204", description = "Match deleted")
     @ApiResponse(responseCode = "404", description = "Match not found")
     @ApiResponse(responseCode = "400", description = "Bad request")
-    @Caching(evict = {
-            @CacheEvict(value = "allMatches", allEntries = true),
-            @CacheEvict(value = "matchesByMap", allEntries = true)
-    })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMatch(@PathVariable Long id) {
         matchService.deleteMatch(id);

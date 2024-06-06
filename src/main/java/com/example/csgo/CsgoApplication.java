@@ -6,6 +6,23 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
+//@SpringBootApplication
+//@EnableCaching
+//public class CsgoApplication {
+//
+//	public static void main(String[] args) {
+//		SpringApplication.run(CsgoApplication.class, args);
+//	}
+//
+//	@Bean
+//	public TomcatServletWebServerFactory servletContainer() {
+//		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+//		tomcat.setPort(3090);
+//		return tomcat;
+//	}
+//}
+
+
 @SpringBootApplication
 @EnableCaching
 public class CsgoApplication {
@@ -14,10 +31,4 @@ public class CsgoApplication {
 		SpringApplication.run(CsgoApplication.class, args);
 	}
 
-	@Bean
-	public TomcatServletWebServerFactory servletContainer() {
-		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-		tomcat.setPort(3090);
-		return tomcat;
-	}
 }

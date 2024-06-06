@@ -1,8 +1,10 @@
 package com.example.csgo.domain.match;
 
+import com.example.csgo.domain.damage.DamageRepository;
 import com.example.csgo.utils.exceptions.NotFoundException;
 import com.example.csgo.utils.interfaces.map.MapCount;
 import com.example.csgo.utils.interfaces.map.MapEnum;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ public class MatchService {
     private RoundRepository roundRepository;
     @Autowired
     private KillRepository killRepository;
+    @Autowired
+    private DamageRepository damageRepository;
 
     public List<Match> getAllMatches() {
         return (List<Match>) matchRepository.findAll();
@@ -36,16 +40,18 @@ public class MatchService {
         return matchRepository.findByMap(map_name);
     }
 
-    public void createMatch(Match match) {
-        matchRepository.save(match);
+    public Match createMatch(Match match) {
+        return matchRepository.save(match);
     }
 
+    @Transactional
     public void deleteMatch(Long id) {
         if (!matchRepository.existsById(id)) {
             throw new NotFoundException();
         }
         roundRepository.deleteAllByMatch_Id(id);
         killRepository.deleteAllByMatch_Id(id);
+        damageRepository.deleteAllByMatch_Id(id);
         matchRepository.deleteById(id);
     }
 

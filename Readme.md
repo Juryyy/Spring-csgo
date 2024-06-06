@@ -6,7 +6,7 @@ Main goal is just to practice with Spring and PostgreSQL, but can help with coll
 
 - [x] Uses Spring, IDEA, PostgreSQL
 - [x] Includes at least 10 endpoints
-- [ ] Includes at least 5 calculations (mathematical operations on arrays of data)
+- [x] Includes at least 5 calculations (mathematical operations on arrays of data)
 - [x] Code follows DRY principle
 - [x] One method is always doing one thing
 - [x] Method should not exceed 20 lines and 2 indentations

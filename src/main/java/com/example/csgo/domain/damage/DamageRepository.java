@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DamageRepository extends CrudRepository<Damage, Long> {
     List<Damage> getDamagesByMatchId(Long matchId);
+
+    void deleteAllByMatch_Id(Long matchId);
 }

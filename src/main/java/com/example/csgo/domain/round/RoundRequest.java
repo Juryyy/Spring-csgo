@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
-@NoArgsConstructor
 public class RoundRequest {
 
     @NotEmpty

@@ -76,5 +76,14 @@ public class RoundService {
             throw new ConflictException();
     }
 
+    public Optional<Round> getRoundById(Long id){
+        return roundRepository.findById(id);
+    }
+
+    public Round updateRound(Long id, Round round){
+        round.setId(id);
+        return roundRepository.save(round);
+    }
+
 
 }
