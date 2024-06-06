@@ -4,34 +4,35 @@ INSERT INTO public.matches (id, match_number, map) VALUES (3, 1003, 'de_mirage')
 INSERT INTO public.matches (id, match_number, map) VALUES (4, 1004, 'de_dust2');
 
 INSERT INTO public.kills (id, match_id, round, attack_side, victim_side, weapon, weapon_type, ct_alive, t_alive, is_bomb_planted)
-VALUES (1, 1, 1, 'T', 'CT', 'AK-47', 'Rifle', 4, 5, false);
+VALUES (1, 1, 1, 'Terrorist', 'CounterTerrorist', 'AK-47', 'Rifle', 4, 5, false);
 INSERT INTO public.kills (id, match_id, round, attack_side, victim_side, weapon, weapon_type, ct_alive, t_alive, is_bomb_planted)
-VALUES (2, 2, 1, 'CT', 'T', 'M4A4', 'Rifle', 5, 4, false);
+VALUES (2, 2, 1, 'CounterTerrorist', 'Terrorist', 'M4A4', 'Rifle', 5, 4, false);
 INSERT INTO public.kills (id, match_id, round, attack_side, victim_side, weapon, weapon_type, ct_alive, t_alive, is_bomb_planted)
-VALUES (3, 3, 1, 'T', 'CT', 'AWP', 'Sniper', 4, 5, true);
+VALUES (3, 3, 1, 'Terrorist', 'CounterTerrorist', 'AWP', 'Sniper', 4, 5, true);
 INSERT INTO public.kills (id, match_id, round, attack_side, victim_side, weapon, weapon_type, ct_alive, t_alive, is_bomb_planted)
-VALUES (4, 1, 2, 'CT', 'T', 'M4A4', 'Rifle', 5, 4, false);
+VALUES (4, 1, 2, 'CounterTerrorist', 'Terrorist', 'M4A4', 'Rifle', 5, 4, false);
 INSERT INTO public.kills (id, match_id, round, attack_side, victim_side, weapon, weapon_type, ct_alive, t_alive, is_bomb_planted)
-VALUES (5, 2, 2, 'T', 'CT', 'AK-47', 'Rifle', 4, 5, true);
+VALUES (5, 2, 2, 'Terrorist', 'CounterTerrorist', 'AK-47', 'Rifle', 4, 5, true);
 INSERT INTO public.kills (id, match_id, round, attack_side, victim_side, weapon, weapon_type, ct_alive, t_alive, is_bomb_planted)
-VALUES (6, 3, 2, 'CT', 'T', 'AWP', 'Sniper', 5, 4, false);
+VALUES (6, 3, 2, 'CounterTerrorist', 'Terrorist', 'AWP', 'Sniper', 5, 4, false);
+
 
 INSERT INTO public.rounds (id, match_id, round, winner_side, ct_eq_val, t_eq_val)
-VALUES (4, 1, 2, 'CT', 5000, 4000);
+VALUES (1, 1, 1, 'Terrorist', 4000, 5000);
 INSERT INTO public.rounds (id, match_id, round, winner_side, ct_eq_val, t_eq_val)
-VALUES (5, 2, 2, 'T', 4000, 5000);
+VALUES (2, 2, 1, 'CounterTerrorist', 5000, 4000);
 INSERT INTO public.rounds (id, match_id, round, winner_side, ct_eq_val, t_eq_val)
-VALUES (6, 3, 2, 'CT', 5000, 4000);
+VALUES (3, 3, 1, 'Terrorist', 4000, 5000);
 INSERT INTO public.rounds (id, match_id, round, winner_side, ct_eq_val, t_eq_val)
-VALUES (1, 1, 1, 'T', 4000, 5000);
+VALUES (4, 1, 2, 'CounterTerrorist', 5000, 4000);
 INSERT INTO public.rounds (id, match_id, round, winner_side, ct_eq_val, t_eq_val)
-VALUES (2, 2, 1, 'CT', 5000, 4000);
+VALUES (5, 2, 2, 'Terrorist', 4000, 5000);
 INSERT INTO public.rounds (id, match_id, round, winner_side, ct_eq_val, t_eq_val)
-VALUES (3, 3, 1, 'T', 4000, 5000);
+VALUES (6, 3, 2, 'CounterTerrorist', 5000, 4000);
 
 INSERT INTO public.damage (id, match_id, round, attack_side, victim_side, hp_dmg, arm_dmg, is_bomb_planted, hitbox, weapon, weapon_type)
-VALUES (1, 1, 1, 'T', 'CT', 100, 0, false, 'Head', 'AK-47', 'Rifle');
+VALUES (1, 1, 1, 'Terrorist', 'CounterTerrorist', 100, 0, false, 'Head', 'AK-47', 'Rifle');
 INSERT INTO public.damage (id, match_id, round, attack_side, victim_side, hp_dmg, arm_dmg, is_bomb_planted, hitbox, weapon, weapon_type)
-VALUES (2, 2, 1, 'CT', 'T', 80, 20, false, 'Chest', 'M4A4', 'Rifle');
+VALUES (2, 2, 1, 'CounterTerrorist', 'Terrorist', 80, 20, false, 'Chest', 'M4A4', 'Rifle');
 INSERT INTO public.damage (id, match_id, round, attack_side, victim_side, hp_dmg, arm_dmg, is_bomb_planted, hitbox, weapon, weapon_type)
-VALUES (3, 3, 1, 'T', 'CT', 100, 0, true, 'Head', 'AWP', 'Sniper');
+VALUES (3, 3, 1, 'Terrorist', 'CounterTerrorist', 100, 0, true, 'Head', 'AWP', 'Sniper');

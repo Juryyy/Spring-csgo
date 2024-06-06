@@ -5,6 +5,7 @@ import com.example.csgo.utils.response.ObjectResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Map;
 
-
-
-//?   !- GET /kills/average/{map_name} - get average kills count for matches on specific map
-//?   !- GET /kills/average/{side} - get average kills count for matches on specific side
-//?   !- GET /kills/average/weapons - get average kills count for matches with each weapon
-//?   !- GET /kills/average/weapon/{weapon_name} - get average kills count for matches with specific weapon
 @RestController
 @RequestMapping("/kills")
+@Tag(
+        name = "Kills",
+        description = "Management of kills."
+)
 public class KillController {
 
     @Autowired

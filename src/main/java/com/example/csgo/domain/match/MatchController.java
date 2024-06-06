@@ -11,6 +11,7 @@ import com.example.csgo.utils.response.ObjectResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/matches")
 @Validated
+@Tag(
+        name="Matches",
+        description="Management of matches."
+)
 public class MatchController {
 
     @Autowired

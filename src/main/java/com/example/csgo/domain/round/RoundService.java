@@ -1,7 +1,9 @@
 package com.example.csgo.domain.round;
 
+import com.example.csgo.domain.match.Match;
 import com.example.csgo.domain.match.MatchRepository;
 import com.example.csgo.utils.exceptions.ConflictException;
+import com.example.csgo.utils.exceptions.NotFoundException;
 import com.example.csgo.utils.interfaces.round.MatchRoundCount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +85,17 @@ public class RoundService {
     public Round updateRound(Long id, Round round){
         round.setId(id);
         return roundRepository.save(round);
+    }
+
+    public void deleteRound(Long id){
+        if(!roundRepository.existsById(id)) {
+            throw new NotFoundException();
+        }
+        roundRepository.deleteById(id);
+    }
+
+    public List<Round> getAllRounds(){
+        return (List<Round>) roundRepository.findAll();
     }
 
 

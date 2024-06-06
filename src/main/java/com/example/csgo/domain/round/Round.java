@@ -2,6 +2,7 @@ package com.example.csgo.domain.round;
 
 import com.example.csgo.domain.match.Match;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class Round {
     private Match match;
 
     @NotNull
+    @Min(1)
     private int round;
 
     @NotNull
@@ -31,9 +33,11 @@ public class Round {
     private String winnerSide;
 
     @NotNull
+    @Min(0)
     private int ctEqVal;
 
     @NotNull
+    @Min(0)
     private int tEqVal;
 
     public Round(Match match, int round, String winnerSide, int ctEqVal, int tEqVal) {
