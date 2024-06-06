@@ -208,7 +208,7 @@ public class MatchIntegrationTest {
     }
 
     @org.junit.jupiter.api.Nested
-    public class PutMatchTest{
+    class PutMatchTest{
         @Test
         public void testUpdateMatch() {
             MatchRequest matchRequest = new MatchRequest(1001L, "de_inferno");

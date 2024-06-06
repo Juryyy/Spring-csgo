@@ -37,12 +37,13 @@ public class KillService {
                 .collect(Collectors.toList());
         List<Object[]> killCountsPerMatch = killRepository.getKillsPerMatchForMaps(mapNames);
 
+        //? Group kill counts for each map
         Map<String, List<Long>> killsPerMatchForMaps = killCountsPerMatch.stream()
                 .collect(Collectors.groupingBy(
                         killCount -> (String) killCount[0],
                         Collectors.mapping(killCount -> (Long) killCount[2], Collectors.toList())
                 ));
-
+        //? Calculate averages
         return killsPerMatchForMaps.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -72,6 +73,7 @@ public class KillService {
 
         Map<String, Map<String, BigDecimal>> result = new HashMap<>();
 
+        //? Calculate averages for each map and side
         for (String map : mapNames) {
             Map<String, BigDecimal> mapResult = new HashMap<>();
             for (String side : sides) {

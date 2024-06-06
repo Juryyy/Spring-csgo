@@ -1,6 +1,8 @@
 package com.example.csgo.domain.kill;
 
 
+import com.example.csgo.utils.exceptions.MapNotInEnumException;
+import com.example.csgo.utils.exceptions.NotFoundException;
 import com.example.csgo.utils.response.ObjectResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -31,6 +34,7 @@ public class KillController {
             description = "Get the average number of kills for all matches for each map."
     )
     @ApiResponse(responseCode = "200", description = "Average number of kills")
+    @ResponseStatus(HttpStatus.OK)
     public ObjectResponse<Map<String, BigDecimal>> getAverageKillCount() {
         Map<String, BigDecimal> response = killService.getAverageKillCount();
         return ObjectResponse.of(response, x -> x);
@@ -42,8 +46,13 @@ public class KillController {
             description = "Get the average number of kills for all matches on a specific map."
     )
     @ApiResponse(responseCode = "200", description = "Average number of kills on specific map")
+    @ApiResponse(responseCode = "404", description = "Map not found")
+    @ResponseStatus(HttpStatus.OK)
     public ObjectResponse<Map<String, BigDecimal>> getAverageKillCountOnMap(@PathVariable String mapName) {
         BigDecimal avgKills = killService.getAverageKillCountOnMap(mapName);
+        if (avgKills == null) {
+            throw new NotFoundException();
+        }
         Map<String, BigDecimal> response = Map.of(mapName, avgKills);
         return ObjectResponse.of(response, x -> x);
     }
@@ -54,6 +63,7 @@ public class KillController {
             description = "Get the number of kills for all matches for each weapon."
     )
     @ApiResponse(responseCode = "200", description = "Number of kills for each weapon")
+    @ResponseStatus(HttpStatus.OK)
     public ObjectResponse<Map<String, Long>> getKillCountForWeapons() {
         Map<String, Long> response = killService.getKillCountForWeapons();
         return ObjectResponse.of(response, x -> x);
@@ -65,6 +75,7 @@ public class KillController {
             description = "Get the average number of kills for all matches for each side on each map."
     )
     @ApiResponse(responseCode = "200", description = "Average number of kills for each side on each map")
+    @ResponseStatus(HttpStatus.OK)
     public ObjectResponse<Map<String, Map<String, BigDecimal>>> getAverageKillCountForSides() {
         Map<String, Map<String, BigDecimal>> response = killService.getAverageKillCountForSides();
         return ObjectResponse.of(response, x -> x);

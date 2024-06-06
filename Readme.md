@@ -13,19 +13,19 @@ Main goal is just to practice with Spring and PostgreSQL, but can help with coll
 - [x] Handles error states (no uncaught exceptions)
 - [x] Uses migrations to prepare database tables
 - [x] Provides web-based documentation of endpoints and models
-- [ ] Includes unit tests for all calculations
-- [ ] Includes integration tests for all endpoints
-- [ ] Includes performance tests for all endpoints
+- [x] Includes unit tests for all calculations
+- [x] Includes integration tests for all endpoints
+- [x] Includes performance tests for all endpoints - done in Python
 
 
 ## Endpoints:
 ### Matches
 
     - GET /matches - get all matches
-    - GET /matches/{map_name} - get matches by map name
-    - GET /matches/maps - get matches count for each map
+    - GET /matches/{id} - get match by id, with all other data about match  
+    - GET /matches/maps - get matches count for each map    
+    - GET /matches/map/{map_name} - get matches by map name
     - GET /matches/top-map-matches - get list of maps with matches with the highest rounds
-    - GET /matches/{id} - get match by id, with all other data about match    
 
     - POST /matches - create a new match
     - DELETE /matches/{id} - delete a match by id
@@ -33,27 +33,27 @@ Main goal is just to practice with Spring and PostgreSQL, but can help with coll
 
 ### Rounds
 
+    - GET /rounds - get all rounds
     - GET /counts - get rounds count + map for each match
     - GET /maps - get rounds count for each map
 
     - POST /rounds - create a new round
+    - PUT /rounds/{id} - update a round by id
     - DELETE /rounds/{id} - delete a round by id
 
-### Damage
-    
-    Not implemented, just a inspiration for future development
+### Damage 
+#### Not implemented, just a inspiration for future development
     !- GET /damage - get total damage for each match
     !- GET /damage/{id} - get total damage for specific match
     !- GET /damage/highest/{id} - get highest damage for specific match
     !- GET /damage/lowest/{id} - get lowest damage for specific match
 
 
-## Mathematical Operations 
+## Mathematical Operations - Endpoints
 ### Rounds
 
-    - GET /rounds/average - get average rounds count for all matches
-    - GET /rounds/average/{map_name} - get average rounds count for matches on specific map
-    - GET /rounds/winrate - get winrate for each team
+    - GET /rounds/avg - get average rounds count for all matches
+    - GET /rounds/avg/{map_name} - get average rounds count for matches on specific map
     - GET /rounds/winrate/{map_name} - get winrate for each team on specific map
 
 ### Kills
@@ -62,4 +62,3 @@ Main goal is just to practice with Spring and PostgreSQL, but can help with coll
     - GET /kills/avg/sides - get average kills count for matches on specific side
     - GET /kills/weapons - get average kills count for matches with each weapon
 
-    !- GET /kills/average/weapon/{weapon_name} - get average kills count for matches with specific weapon

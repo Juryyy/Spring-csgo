@@ -56,7 +56,7 @@ public class RoundController {
         return ArrayResponse.of(roundCounts, roundCount -> roundCount);
     }
 
-    @GetMapping(value = "/average", produces = "application/json")
+    @GetMapping(value = "/avg", produces = "application/json")
     @Operation(
             summary = "Get average number of rounds",
             description = "Get the average number of rounds played for all matches."
@@ -66,7 +66,7 @@ public class RoundController {
         return roundService.getAverageRoundCount();
     }
 
-    @GetMapping(value = "/average/{map}", produces = "application/json")
+    @GetMapping(value = "/avg/{map}", produces = "application/json")
     @Operation(
             summary = "Get average number of rounds for a map",
             description = "Get the average number of rounds played for a specific map."
