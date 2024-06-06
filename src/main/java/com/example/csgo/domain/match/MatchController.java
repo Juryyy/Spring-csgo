@@ -50,6 +50,7 @@ public class MatchController {
             summary = "Get all matches",
             description = "Get all matches in the system."
     )
+    //@Cacheable("allMatches")
     @ApiResponse(responseCode = "200", description = "List of matches")
     @ResponseStatus(HttpStatus.OK)
     public ArrayResponse<MatchResponse> getAllMatches() {
@@ -62,6 +63,7 @@ public class MatchController {
             summary = "Get matches by map",
             description = "Get all matches in the system by map."
     )
+    //@Cacheable(value = "matchesByMap", key = "#map_name")
     @ApiResponse(responseCode = "200", description = "List of matches")
     @ResponseStatus(HttpStatus.OK)
     public ArrayResponse<MatchResponse> getMatchesByMap(@PathVariable String map_name) {
@@ -77,6 +79,10 @@ public class MatchController {
     @ApiResponse(responseCode = "201", description = "Match created")
     @ApiResponse(responseCode = "400", description = "Bad request")
     @ResponseStatus(HttpStatus.CREATED)
+    //@Caching(evict = {
+    //        @CacheEvict(value = "allMatches", allEntries = true),
+    //        @CacheEvict(value = "matchesByMap", key = "#match.map")
+    //})
     @Valid
     public ObjectResponse<MatchResponse> createMatch(@Valid @RequestBody MatchRequest matchRequest) {
         try {
@@ -96,6 +102,11 @@ public class MatchController {
     )
     @ApiResponse(responseCode = "200", description = "Match updated")
     @ApiResponse(responseCode = "404", description = "Match not found")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    //@Caching(evict = {
+    //        @CacheEvict(value = "allMatches", allEntries = true),
+    //        @CacheEvict(value = "matchesByMap", key = "#match.map")
+    //})
     @ResponseStatus(HttpStatus.OK)
     public ObjectResponse<MatchResponse> updateMatch(@PathVariable Long id, @RequestBody @Valid MatchRequest matchRequest) {
         try {
@@ -119,6 +130,10 @@ public class MatchController {
     @ApiResponse(responseCode = "204", description = "Match deleted")
     @ApiResponse(responseCode = "404", description = "Match not found")
     @ApiResponse(responseCode = "400", description = "Bad request")
+    //@Caching(evict = {
+    //        @CacheEvict(value = "allMatches", allEntries = true),
+    //        @CacheEvict(value = "matchesByMap", key = "#match.map")
+    //})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMatch(@PathVariable Long id) {
         matchService.deleteMatch(id);
@@ -130,7 +145,7 @@ public class MatchController {
             description = "Get counts of each map in the system."
     )
     @ApiResponse(responseCode = "200", description = "List of counts")
-    @Cacheable("mapCounts")
+    //@Cacheable("mapCounts")
     @ResponseStatus(HttpStatus.OK)
     public ObjectResponse<Map<String, Integer>> getMapCounts() {
         Map<String, Long> mapCounts = matchService.getMapCounts();
